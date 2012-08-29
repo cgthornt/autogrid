@@ -7,15 +7,16 @@ require "autogrid/version"
 Gem::Specification.new do |s|
   s.name        = "autogrid"
   s.version     = Autogrid::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Autogrid."
-  s.description = "TODO: Description of Autogrid."
+  s.authors     = ["Christopher Thornton"]
+  s.email       = ["rmdirbin@gmail.com"]
+  s.homepage    = "https://github.com/cgthornt/autogrid"
+  s.summary     = "Autogrid automatically creates grids for your models"
+  s.description = "Want an easy way to create data grids? Now you can easily with autogrid!"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,lib,vendor}/**/*"] + ["Rakefile", "README.md"]
 
   s.add_dependency "rails", "~> 3.2.8"
+  s.add_dependency "jquery-datatables-rails", "~> 1.10.0"
 
   s.add_development_dependency "sqlite3"
 end

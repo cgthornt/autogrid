@@ -1,0 +1,17 @@
+<%= content_tag(:table, table.options[:html_options]) do -%>
+  <%= content_tag(:thead) do -%>
+    <% table.columns.each do |name,col| -%>
+      <%= content_tag(:th, col.options[:name], col.options[:html_options]) -%>
+    <% end %>
+  <% end %>
+  <%= content_tag(:tbody) do -%>
+    <% table.each do |record| -%>
+      <%= content_tag :tr do -%>
+        <% table.columns.each do |name,col| -%>
+          <% col.update_model(record) %>
+          <%= content_tag(:td, col.formatted, col.options[:cell_html]) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
