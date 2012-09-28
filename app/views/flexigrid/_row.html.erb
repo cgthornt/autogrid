@@ -1,0 +1,3 @@
+    <tr id=<%="#{row.class.name.downcase}_#{row.id}"%><% if grid.url != false %> style="cursor: pointer; cursor: hand;" onclick="document.location.href='<%= grid.url.nil? ? url_for(row) : url_for(grid.url.merge({:id => row.id})) %>'"<% end %>>
+      <%= render :partial => 'shared/flexigrid/cell', :collection => grid.get_all_sorted_columns, :locals => {:row => row} %>
+    </tr>

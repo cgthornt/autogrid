@@ -1,0 +1,3 @@
+<%# Flexigrid AJAX fun! Currently not used for anything, and we might consider keeping it that way %>
+<% grid.cookies = cookies %>
+<%= render :partial => 'shared/flexigrid/row', :collection => grid.model, :locals => {:grid => grid} %>

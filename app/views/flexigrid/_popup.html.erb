@@ -1,0 +1,13 @@
+  <div style="min-width:350px;min-height:300px">
+    <h3>Show Columns:</h3>
+    <div style="float:left;margin-right:20px">
+    <% grid.get_columns.each_with_index do |col,index| %>
+      <% if index % 10 == 0 %></div><div style="float:left;margin-right:20px"><% end%>
+      <input type="checkbox" class="flexicheck" id="flexi_showbtn_<%= col.id %>" data-id="<%= col.id.parameterize %>" data-table-id="<%= grid.id %>" <%= raw 'checked="checked"' if col.visible? or col.always_visible? %> <%= raw 'disabled="disabled"' if col.always_visible? %>>
+      <label for="flexi_showbtn_<%= col.id %>"><%= col.name %></label><br>
+    <% end %>
+    </div>
+    <div style="clear:both;padding-top:15px">
+      <hr>
+      <p><a href="#reset" class="flexireset-btn" data-id="<%= grid.id %>">Reset Columns to Default</a></p></div>
+  </div>

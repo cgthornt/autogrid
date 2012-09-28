@@ -1,0 +1,7 @@
+      <th data-id="<%= header.id %>" data-draggable="1" data-table-id="<%= grid.id %>" class="flexith <%= 'flexihidden' if !header.visible? %> flexicol_<%= header.id.parameterize %> <%= 'sortcol' if header.sortable? %> <%= 'sort' + header.sort_order.downcase if header.sort_col? %>">
+        <% if header.sortable? %>
+          <a class="flexisort<%= ' flexisort_col flexisort_' + header.sort_order.downcase if header.sort_col?  %>"
+              style="cursor:hand;cursor: pointer"
+              data-table-id="<%= grid.id %>" data-id="<%= header.id %>" data-sort-as="<%= header.to_sort %>"><%= header.name %></a>
+        <% else %><%= header.name %><% end %>
+      </th>

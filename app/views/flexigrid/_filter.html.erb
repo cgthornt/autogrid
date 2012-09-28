@@ -1,0 +1,12 @@
+<%# for adding a filter block to the Flexigrid %>
+<div id="filters" class="filters collapse">
+	<div class="filters-inner">
+<%= form_tag grid.filter_form[:url], grid.filter_form[:options] do %>
+  <%= hidden_field_tag :page, params[:page] %>
+  <%= hidden_field_tag :per_page, params[:per_page] %>
+  <%= capture(&grid.filter_block) %>
+<% end %>
+</div>
+</div>
+
+<a href="#" data-toggle="collapse" data-target="#filters" class="collapse-toggle collapse-arrow">Collapse</a>

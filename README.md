@@ -1,4 +1,8 @@
-autogrid
+Autogrid
 ========
+The autogrid gem makes it easy to create automatic grids for rails.
 
-The autogrid gem makes it easy to do common grid related tasks for Rails
+**CURRENTLY UNDER DEVELOPMENT - DO NOT USE**
+
+## Acknowledgments
+This code was made open source by [FlexWage Solutions](http://www.flexwage.com/).

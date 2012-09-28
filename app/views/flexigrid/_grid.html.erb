@@ -1,0 +1,29 @@
+<!-- Flexigrid: <%= grid.id %> -->
+<p id="flexigrid_title">
+  <%= grid.title ||= grid.model_class.name.titleize.pluralize %>
+  <% if grid.editable_columns %>
+    <span class="right edit sidenote white">
+      <a href="#editcol" class="flexiedit popup-box-link" data-table-id="<%= grid.id %>" name="<%= grid.id %>_popup_open">Edit Columns</a>
+    </span>
+    
+    <span class="right sidenote white search" id="search-the-cardholders-please">
+      <a href="#" class="flexiedit popup-box-link collapse-toggle" data-toggle="collapse" data-target="#filters">Search Cardholders</a>
+    </span>
+
+  <% end %>
+</p>
+<%= render :partial => 'shared/flexigrid/filter', :locals => {:grid => grid } unless grid.filter_block.blank? %>
+<table class="flexme" id="<%= grid.id %>" data-generated="1" style="display:none"><thead><tr class="flexicols DataGridHeader">
+  <%= render :partial => 'shared/flexigrid/header', :collection => grid.get_all_sorted_columns, :locals => {:grid => grid} %>
+</tr></thead><tbody class="<%= 'flexiajax' if grid.ajax? %>" id="<%= grid.id %>_body">
+  <%= render :partial => 'shared/flexigrid/row', :collection => grid.model, :locals => {:grid => grid} unless grid.ajax? %>
+</tbody></table>
+<%= paginate grid.model if grid.paginate %>
+
+
+<%# Popup Box Contents %>
+<% if grid.editable_columns %>
+  <%= popup_box grid.id + '_popup', :title => 'Show Columns', :minWidth => 350, :width => 'auto', :height => 'auto', :draggable => true, :modal => false, :resizable => true, :position => 'top' do %>
+    <%= render :partial => 'shared/flexigrid/popup', :locals => {:grid => grid} %>
+  <% end %>
+<% end %>

@@ -1,18 +1,15 @@
 module Autogrid
   module ActionViewExtension
     
-    # Allows the autogrid to be rendered via html
-    def render_autogrid(table, *args, &block)
-      
-      # Pass the ActionView to the table and update any options
-      table.view = self
-      table.update_options(*args)
-      
-      # Call the block
-      if block_given?
-        block.call(table)
-      end
-      table.to_html
+    # Displays a grid from a {Flexigrid} object
+    # @param [Flexigrid] grid a Flexigrid object
+    def autogrid(grid)
+      raise TypeError.new "grid must be a Flexigrid object" unless grid.is_a? Flexigrid
+      grid.cookies = cookies
+      grid.before_render
+      render :partial => 'shared/flexigrid/grid', :locals => {
+        :grid => grid
+      }
     end
   end
 end

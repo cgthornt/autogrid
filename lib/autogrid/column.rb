@@ -1,60 +1,91 @@
+# Represents a grid column!
 module Autogrid
   class Column
-    attr_reader :table, :id, :attribute, :klass, :model, :value, :options, :format, :format_options
     
-    attr_accessor :block
+    # An unique String ID of this column
+    attr_accessor :id
     
-    def default_options
-      {
-      :format => :plain,
-      :name   => lambda{ klass.human_attribute_name(attribute) },
-      :html_options => {},
-      :cell_html => {},
-      }
-    end
+    # The name of this column, which should be human readable
+    attr_accessor :name
     
-    @@options_proc = {
-    }
+    # todo: comment these
+    attr_accessor :html, :header_html, :visible, :hidden, :filter, :use_db,
+      :sortable, :sort_order, :format, :format_options, :always_visible
+    attr_reader :grid, :db_column, :db_table, :db_fullname
     
-    def initialize(table, name, the_options = {}, &the_block)
-      @table = table
-      @id  = name.to_s
-      sp = name.to_s.split('.')
-      @attribute = sp.pop
-      begin
-        @klass = sp.blank? ? table.record : sp.last.singularize.camelize.constantize
-      rescue
-        @klass = table.record
-      end
-      block = the_block
-      
-      update_options(the_options)
-    end
-    
-    def update_model(model)
-      @value = Util.nested_send(model, id)
-      @model = model
-    end
-    
-    def update_options(the_options = {})
-      @options = Util.optionize((@options ||= default_options), @@options_proc, the_options)
-      
-      unless block.is_a?(Proc)
-        @format = options[:format]
-        @format_options = {}
-        if @format.is_a?(Hash)
-          @format,@format_options = @format.first
+    # Makes a new column!
+    # == Parameters
+    # * +grid+ - a Flexigrid object'
+    # * +id+ - The ID for this column
+    # * +name+ - an optional human readable name for this column. If one is not
+    #   given, then one will automatically be generated.
+    def initialize(grid, id, name = nil)
+      @grid = grid
+      @id = id
+      @sortable = true
+      # Databaseize stuff
+      id_s = id.split('.')
+      @db_column = id_s.last
+      @db_table = id_s.count == 1 ? @grid.model_class.table_name : id_s[id_s.count - 2].tableize
+      @db_fullname = "`#{@db_table}`.`#{@db_column}`"
+      if name.nil?
+        if @grid.model.is_a? ActiveRecord::Relation
+          @name = @grid.model.klass.human_attribute_name(@db_column)
+        elsif @grid.model.is_a? ActiveRecord::Base
+            @name = @grid.model.class.human_attribute_name(@db_column)
+        else
+          raise "Grid model must be an ActiveRecord type of object!"
         end
-        raise ArgumentError, "Format '#{@format}' is not supported!" unless table.formatters.key?(@format)
+      else
+        @name = name
       end
+      # Defaults
+      @hidden = @visible = false
     end
     
-    def plain
-      value
+    def to_sort
+      return 'asc' if @sort_order.blank? or @sort_order == 'DESC'
+      return 'desc'
     end
     
-    def formatted
-      return block.is_a?(Proc) ? block.call(self,plain) : table.formatters[@format].call(self, @format_options)
+    def update!
+    end
+    
+    def sortable?
+      @sortable
+    end
+    
+    def sort_col?
+      !@sort_order.blank?
+    end
+    
+    def render(actionView, mdl)
+      data = Misc::nested_send(mdl, @id)
+      return actionView.capture(data,mdl,&filter) unless filter.blank?
+      if !@format.nil? and Flexigrid::Formatter.respond_to? @format
+        return Flexigrid::Formatter.send(@format, actionView, data, @format_options)
+      end
+      return data
+    end
+    
+    
+    # Whether this column is the one being used for sorting
+    def sort?
+      @grid.sort == self
+    end
+    
+    # Whether this column is hidden by default
+    def hidden?
+      @hidden
+    end
+    
+    # Whether this column should currently be displayed
+    def visible?
+      @visible
+    end
+    
+    def always_visible?
+      @always_visible
     end
     
   end
